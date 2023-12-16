@@ -8,7 +8,7 @@
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="410dp"
+        android:layout_width="0dp"
         android:layout_height="178dp"
         android:contentDescription="@string/todo"
         android:foreground="@drawable/nav_back"
@@ -97,7 +97,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView3"
         android:numColumns="5"
-        app:flow_verticalGap="2dp"
+        android:gravity="center"
+        app:flow_verticalGap="4dp"
 
         tools:listitem="@layout/cat_grid_item"/>
 

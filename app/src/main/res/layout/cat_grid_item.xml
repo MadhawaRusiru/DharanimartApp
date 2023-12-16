@@ -1,37 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingTop="4dp">
 
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center|center_horizontal"
-        android:orientation="vertical"
-        android:textAlignment="center">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/imgCategoryIcon"
-            android:layout_width="55dp"
-            android:layout_height="61dp"
+            android:layout_width="45dp"
+            android:layout_height="54dp"
+            android:paddingTop="4dp"
             android:textAlignment="center"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="@+id/txtCategoryTitle"
+            app:layout_constraintStart_toStartOf="@+id/txtCategoryTitle"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/circle" />
+
+        <ProgressBar
+            android:id="@+id/progressBar2"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="0dp"
+            android:layout_height="54dp"
+            android:paddingTop="4dp"
+            app:layout_constraintEnd_toEndOf="@+id/txtCategoryTitle"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/txtCategoryTitle"
             android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="4dp"
             android:lines="2"
             android:maxLines="2"
             android:text="Ornamental flowers and plants"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="12sp"
-            app:autoSizeMaxTextSize="11dp" />
-    </LinearLayout>
+            android:textSize="10sp"
+            app:autoSizeMaxTextSize="11dp"
+            app:layout_constraintTop_toBottomOf="@+id/imgCategoryIcon" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </RelativeLayout>

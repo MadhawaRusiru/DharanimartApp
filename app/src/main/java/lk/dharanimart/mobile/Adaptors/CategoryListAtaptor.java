@@ -5,11 +5,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -28,6 +30,7 @@ public class CategoryListAtaptor extends BaseAdapter {
     LayoutInflater inflater;
     String SiteUrl;
     ImageView catIcon;
+    ProgressBar progressBar;
 
     public CategoryListAtaptor(Context context, List<Category> categoryList) {
         this.context = context;
@@ -56,29 +59,55 @@ public class CategoryListAtaptor extends BaseAdapter {
         convertView = inflater.inflate(R.layout.cat_grid_item, null);
         catIcon = convertView.findViewById(R.id.imgCategoryIcon);
         TextView categoryTitle = convertView.findViewById(R.id.txtCategoryTitle);
+        progressBar = convertView.findViewById(R.id.progressBar2);
 
         Category category = categoryList.get(position);
         categoryTitle.setText(category.getName());
 
-        LoadPicture loadPicture = new LoadPicture(catIcon);
+        LoadPicture loadPicture = new LoadPicture(catIcon,progressBar);
         loadPicture.execute(category.getIcon(), SiteUrl);
 
         return convertView;
     }
 
-    private static class LoadPicture extends AsyncTask<String, Void, Bitmap> {
+    public static class LoadPicture extends AsyncTask<String, Void, Bitmap> {
 
         private final WeakReference<ImageView> imageViewReference;
+        private final WeakReference<ProgressBar> progressBarReferance;
+        private static LruCache<String, Bitmap> memoryCache;
 
-        LoadPicture(ImageView imageView) {
+        static {
+            // Initialize the cache with 1/8 of the available memory
+            int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+            int cacheSize = maxMemory / 8;
+            memoryCache = new LruCache<>(cacheSize);
+        }
+
+        LoadPicture(ImageView imageView, ProgressBar progressBar) {
             imageViewReference = new WeakReference<>(imageView);
+            progressBarReferance = new  WeakReference<>(progressBar);
         }
 
         @Override
         protected Bitmap doInBackground(String... strings) {
+            String imageUrl = strings[1] + "/img/cat_img/" + strings[0];
+
+            // Check if the image is available in the memory cache
+            Bitmap cachedBitmap = memoryCache.get(imageUrl);
+            if (cachedBitmap != null) {
+                return cachedBitmap;
+            }
+
             try {
-                InputStream inputStream = new URL(strings[1] + "/img/cat_img/" + strings[0]).openStream();
-                return BitmapFactory.decodeStream(inputStream);
+                InputStream inputStream = new URL(imageUrl).openStream();
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+
+                // Cache the bitmap in memory
+                if (bitmap != null) {
+                    memoryCache.put(imageUrl, bitmap);
+                }
+
+                return bitmap;
             } catch (IOException e) {
                 Log.e("CAT_ICON", "Error while loading. Icon: " + strings[0]);
                 return null;
@@ -90,8 +119,10 @@ public class CategoryListAtaptor extends BaseAdapter {
             // Update the UI with the loaded image
             if (imageBitmap != null) {
                 ImageView imageView = imageViewReference.get();
+                ProgressBar progressBar = progressBarReferance.get();
                 if (imageView != null) {
                     imageView.setImageBitmap(imageBitmap);
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
             }
         }

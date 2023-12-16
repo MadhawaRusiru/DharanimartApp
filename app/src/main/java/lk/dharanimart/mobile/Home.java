@@ -2,6 +2,7 @@ package lk.dharanimart.mobile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,11 +35,13 @@ public class Home extends AppCompatActivity {
     List<Category> categoryList;
     public CategoryListAtaptor categoryListAdaptor;
     GridView gridView;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        sharedPreferences = getSharedPreferences("DharanimartApp",MODE_PRIVATE);
 
         siteUrl = getResources().getString(R.string.siteurl);
 
@@ -83,7 +86,9 @@ public class Home extends AppCompatActivity {
 //                        SuccessResponse<Category> categories = gson.fromJson(response.toString(), categoryListType);
 
                         CategoryResponse categories = gson.fromJson(response.toString(), CategoryResponse.class);
-
+                        SharedPreferences.Editor sd = sharedPreferences.edit();
+                        sd.putString("CAT_STRING", response.toString());
+                        sd.apply();
                         Log.d("MY_LOG",categories.getData().get(0).getName());
 
                         return categories.getData();
