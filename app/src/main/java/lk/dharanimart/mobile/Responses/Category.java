@@ -41,7 +41,7 @@ public class Category {
         this.subcat = subcat;
     }
 
-    class SubCategory {
+    public class SubCategory {
         private int id;
         private String name;
         private int total;
@@ -72,7 +72,7 @@ public class Category {
             this.lower = lower;
         }
 
-        class LowerSubCategory {
+        public class LowerSubCategory {
             private int id;
             private String name;
 

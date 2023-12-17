@@ -2,6 +2,7 @@ package lk.dharanimart.mobile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -60,13 +61,13 @@ public class Home extends AppCompatActivity {
         @Override
         protected List<Category> doInBackground(String... strings) {
             try {
-                String apiUrl = "https://www.dharanimart.lk/APP/API";
+                String apiUrl = "https://www.dharanimart.lk/APP/API/?S=GET_CATEGORIES";
 
                 URL url = new URL(apiUrl);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
                 try {
-                    urlConnection.setRequestMethod("POST");
+                    urlConnection.setRequestMethod("GET");
                     urlConnection.setRequestProperty("Content-Type", "application/json");
 
                     int responseCode = urlConnection.getResponseCode();
@@ -116,17 +117,9 @@ public class Home extends AppCompatActivity {
                 gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                MyJourneyNewFragment routeRequestViewFragment = new MyRouteRequestsFragment();
-//                Bundle args = new Bundle();
-//                args.putString("route_request",gson.toJson(myJourneyList.get(position)));
-//                args.putString("notification_description","");
-//
-//                routeRequestViewFragment.setArguments(args);
-//
-//                FragmentTransaction transaction = requireFragmentManager().beginTransaction();
-//                transaction.replace(R.id.passengerHomeFrame, routeRequestViewFragment);
-//                transaction.addToBackStack(null);
-//                transaction.commit();
+                        Intent catView = new Intent(getApplicationContext(), CategoryView.class);
+                        catView.putExtra("CATEGORY", new Gson().toJson(categories.get(position)));
+                        startActivity(catView);
                     }
                 });
             }

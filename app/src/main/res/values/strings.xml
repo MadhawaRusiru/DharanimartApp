@@ -2,4 +2,6 @@
     <string name="app_name">Dharanimart</string>
     <string name="siteurl">https://www.dharanimart.lk</string>
     <string name="todo">TODO</string>
+    <string name="sub_cateogry">Sub Cateogry</string>
+    <string name="lower_sub_cat">Select</string>
 </resources>

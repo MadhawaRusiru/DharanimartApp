@@ -19,17 +19,17 @@ public class SuccessResponse<E> {
         this.msg = msg;
     }
 
-    public Data<E> getData() {
+    public List<E> getData() {
         return data;
     }
 
-    public void setData(Data data) {
+    public void setData(List<E> data) {
         this.data = data;
     }
 
     private Boolean success;
     private String msg;
-    private Data<E> data;
+    private List<E> data;
 
     public int getTotal() {
         return total;
@@ -41,16 +41,4 @@ public class SuccessResponse<E> {
 
     private int total;
 
-    public class Data<E>{
-        public List<E> getList() {
-            return list;
-        }
-
-        public void setList(List<E> list) {
-            this.list = list;
-        }
-
-        private List<E> list;
-
-    }
 }

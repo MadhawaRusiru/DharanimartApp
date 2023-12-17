@@ -3,20 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:layout_height="320dp"
+        android:background="#FFFFFF"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/imageView7"
-            android:layout_width="163dp"
+            android:id="@+id/imgProductImage"
+            android:layout_width="0dp"
             android:layout_height="210dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/logo"
-            tools:layout_editor_absoluteX="10dp" />
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvProductTitle"
@@ -26,10 +34,12 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:gravity="center"
+            android:maxLines="2"
             android:text="Land for Sale/ Rideemaliyadda"
-            app:layout_constraintEnd_toEndOf="@+id/imageView7"
-            app:layout_constraintStart_toStartOf="@+id/imageView7"
-            app:layout_constraintTop_toBottomOf="@+id/imageView7" />
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="@+id/imgProductImage"
+            app:layout_constraintStart_toStartOf="@+id/imgProductImage"
+            app:layout_constraintTop_toBottomOf="@+id/imgProductImage" />
 
         <TextView
             android:id="@+id/tvProductPrice"
@@ -37,6 +47,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Rs. 900,000.00"
+            android:textColor="#0CBB70"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/tvProductTitle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvProductTitle" />
@@ -45,40 +57,69 @@
             android:id="@+id/tvProductRealPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="2dp"
             android:text="Rs. 1,000,000.00"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/tvProductPrice"
             app:layout_constraintStart_toStartOf="@+id/tvProductPrice"
             app:layout_constraintTop_toBottomOf="@+id/tvProductPrice" />
 
         <ImageView
-            android:id="@+id/imageView8"
-            android:layout_width="43dp"
-            android:layout_height="36dp"
+            android:id="@+id/imgProductTileDiscount"
+            android:layout_width="53dp"
+            android:layout_height="49dp"
             android:layout_margin="0dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="8dp"
+            android:foregroundGravity="center_vertical|center|center_horizontal"
             android:padding="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/tvProductTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/discount_back" />
 
         <TextView
-            android:id="@+id/textView6"
-            android:layout_width="26dp"
-            android:layout_height="27dp"
+            android:id="@+id/tvProductTileDiscount"
+            android:layout_width="28dp"
+            android:layout_height="17dp"
+            android:layout_marginTop="12dp"
             android:gravity="center|center_horizontal|center_vertical"
-            android:text="10% off"
+            android:lines="2"
+            android:maxLines="2"
+            android:text="10%"
             android:textColor="#FBFBFB"
-            android:textSize="9sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             app:autoSizeTextType="none"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView8"
-            app:layout_constraintEnd_toEndOf="@+id/imageView8"
+            app:layout_constraintEnd_toEndOf="@+id/imgProductTileDiscount"
             app:layout_constraintHorizontal_bias="0.515"
-            app:layout_constraintStart_toStartOf="@+id/imageView8"
-            app:layout_constraintTop_toTopOf="@+id/imageView8"
-            app:layout_constraintVertical_bias="0.541" />
+            app:layout_constraintStart_toStartOf="@+id/imgProductTileDiscount"
+            app:layout_constraintTop_toTopOf="@+id/imgProductTileDiscount" />
+
+        <ProgressBar
+            android:id="@+id/progressBar3"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/imgProductImage"
+            app:layout_constraintEnd_toEndOf="@+id/imgProductImage"
+            app:layout_constraintStart_toStartOf="@+id/imgProductImage"
+            app:layout_constraintTop_toTopOf="@+id/imgProductImage" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="2dp"
+            android:layout_marginBottom="14dp"
+            android:text="off"
+            android:textColor="#F6F6F6"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/imgProductTileDiscount"
+            app:layout_constraintEnd_toEndOf="@+id/tvProductTileDiscount"
+            app:layout_constraintStart_toStartOf="@+id/tvProductTileDiscount"
+            app:layout_constraintTop_toBottomOf="@+id/tvProductTileDiscount" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
