@@ -141,6 +141,11 @@ public class CategoryView extends AppCompatActivity {
             }
         });
 
+        selectedCat = 0;
+        selectedSubCat = 0;
+        selectedLowerSubCat = 0;
+        searchKey = "";
+
         LoadProducts loadProducts = new LoadProducts();
         loadProducts.execute();
     }
