@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -44,19 +45,21 @@ public class ProductView extends AppCompatActivity {
         lnrImageContainer = findViewById(R.id.lnrProductViewImageContainer);
         mainImageView = findViewById(R.id.imgProductViewMainImageView);
 
-        String[] imgArray = new String[product.getImages().size()];
+        String[] imageUrls = new String[product.getImages().size()];
         for (int i = 0; i < product.getImages().size(); i++) {
-            imgArray[i] = product.getImages().get(i);
+            imageUrls[i] = product.getImages().get(i);
         }
+        int smallerSize = 150;
 
-        for (String imageUrl : imgArray) {
+        for (String imageUrl : imageUrls) {
             ImageView imageView = new ImageView(this);
             new ImageDownloadTask(imageView, mainImageView).execute(imageUrl);
             imageView.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT));
+                    smallerSize,
+                    smallerSize));
             lnrImageContainer.addView(imageView);
         }
+
 
     }
 
