@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F6F5F5"
     tools:context=".Home">
 
     <ImageView
@@ -49,12 +50,12 @@
                 android:layout_height="match_parent">
 
                 <EditText
-                    android:id="@+id/editTextTextPersonName"
+                    android:id="@+id/edtSearchText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginEnd="8dp"
-                    android:backgroundTint="#0B0B0B"
+                    android:backgroundTint="#FBFBFB"
                     android:drawableStart="@drawable/ic_baseline_search_24"
                     android:hint="Search here"
                     android:inputType="textPersonName"
@@ -64,23 +65,24 @@
                     android:shadowColor="#971010"
                     android:singleLine="true"
                     android:text=""
+                    android:textColor="#FFFFFF"
                     android:textColorHint="#FFAB91"
                     android:textSize="16dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/button"
+                    app:layout_constraintEnd_toStartOf="@+id/btnHomeSearch"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
-                    android:id="@+id/button"
+                    android:id="@+id/btnHomeSearch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:includeFontPadding="false"
                     android:text="Search"
                     android:textAllCaps="false"
-                    app:layout_constraintBottom_toBottomOf="@+id/editTextTextPersonName"
+                    app:layout_constraintBottom_toBottomOf="@+id/edtSearchText"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/editTextTextPersonName" />
+                    app:layout_constraintTop_toTopOf="@+id/edtSearchText" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

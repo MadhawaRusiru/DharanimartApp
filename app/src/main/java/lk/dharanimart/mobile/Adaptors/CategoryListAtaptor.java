@@ -90,7 +90,7 @@ public class CategoryListAtaptor extends BaseAdapter {
 
         @Override
         protected Bitmap doInBackground(String... strings) {
-            String imageUrl = strings[1] + "/img/cat_img/" + strings[0];
+            String imageUrl = strings[1] + "/img/cat_app_img/" + strings[0];
 
             // Check if the image is available in the memory cache
             Bitmap cachedBitmap = memoryCache.get(imageUrl);

@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewStub;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListView;
 
@@ -52,8 +54,22 @@ public class Home extends AppCompatActivity {
         }
         gridView = findViewById(R.id.gridView);
 
+        Button btnSearch = findViewById(R.id.btnHomeSearch);
+        EditText edtSearchKey = findViewById(R.id.edtSearchText);
+
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String searchKey = edtSearchKey.getText().toString();
+                Intent intent = new Intent(Home.this, ProductSearch.class);
+                intent.putExtra("SEARCH_KEY",searchKey);
+                startActivity(intent);
+            }
+        });
+
         LoadCategories loadCategories = new LoadCategories();
         loadCategories.execute();
+
     }
 
     public class LoadCategories extends AsyncTask<String, Void, List<Category>> {

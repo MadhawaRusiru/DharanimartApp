@@ -34,6 +34,12 @@ public class Category {
     public void setTotal(int total) {
         this.total = total;
     }
+
+    public Category(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public List<SubCategory> getSubcat() {
         return subcat;
     }
