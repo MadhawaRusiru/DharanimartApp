@@ -6,6 +6,6 @@
     android:gravity="center_vertical"
     android:padding="8dp"
     android:textColor="@color/white"
-    android:textSize="16sp"
+    android:textSize="14sp"
     app:circularflow_defaultRadius="10dp"
     app:circularflow_radiusInDP="5dp" />

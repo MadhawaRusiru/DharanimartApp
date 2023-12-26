@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import lk.dharanimart.mobile.R;
@@ -32,11 +33,14 @@ public class CategoryListAtaptor extends BaseAdapter {
     ImageView catIcon;
     ProgressBar progressBar;
 
+    private List<LoadPicture> downloadTasks;
+
     public CategoryListAtaptor(Context context, List<Category> categoryList) {
         this.context = context;
         this.categoryList = categoryList;
         inflater = LayoutInflater.from(context);
         SiteUrl = context.getResources().getString(R.string.siteurl);
+        downloadTasks = new ArrayList<>();
     }
 
     @Override
@@ -65,11 +69,16 @@ public class CategoryListAtaptor extends BaseAdapter {
         categoryTitle.setText(category.getName());
 
         LoadPicture loadPicture = new LoadPicture(catIcon,progressBar);
+        downloadTasks.add(loadPicture);
         loadPicture.execute(category.getIcon(), SiteUrl);
-
         return convertView;
     }
-
+    public void cancelAllTasks() {
+        for (LoadPicture task : downloadTasks) {
+            task.cancel(true);
+        }
+        downloadTasks.clear();
+    }
     public static class LoadPicture extends AsyncTask<String, Void, Bitmap> {
 
         private final WeakReference<ImageView> imageViewReference;

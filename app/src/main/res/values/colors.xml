@@ -7,4 +7,8 @@
     <color name="teal_700">#8D1F21</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="BuyButtonBack">#00CC99</color>
+    <color name="ProductAvailable">#28a745</color>
+    <color name="ProductAskSelelr">#ffc107</color>
+    <color name="ProductNotAvailable">#dc3545</color>
 </resources>

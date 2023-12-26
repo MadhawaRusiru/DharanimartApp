@@ -34,7 +34,11 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import lk.dharanimart.mobile.Adaptors.CategoryListAtaptor;
 import lk.dharanimart.mobile.Adaptors.ProductListAdaptor;
@@ -52,6 +56,7 @@ public class CategoryView extends AppCompatActivity {
     String SiteUrl;
     static ProductListAdaptor productListAdaptor;
     GridView gridView;
+    public  Executor executor;
 
     public int selectedCat = 0;
     public int selectedSubCat = 0;
@@ -59,6 +64,8 @@ public class CategoryView extends AppCompatActivity {
     public String searchKey = "";
 
     static List<Product> productList;
+
+    private int savedScrollPosition = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,8 +170,21 @@ public class CategoryView extends AppCompatActivity {
         selectedLowerSubCat = 0;
         searchKey = "";
 
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        savedScrollPosition = gridView.getFirstVisiblePosition();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         LoadProducts loadProducts = new LoadProducts();
         loadProducts.execute();
+
     }
 
     public class LoadProducts extends AsyncTask<String, Void, List<Product>> {
@@ -228,12 +248,16 @@ public class CategoryView extends AppCompatActivity {
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             Intent productView = new Intent(getApplicationContext(), ProductView.class);
                             productView.putExtra("PRODUCT", new Gson().toJson(products.get(position)));
+                            productListAdaptor.cancelAllTasks();
                             startActivity(productView);
                         }
                     });
                 }else{
                     gridView.setVisibility(View.INVISIBLE);
                 }
+            }
+            if (savedScrollPosition != -1) {
+                gridView.setSelection(savedScrollPosition);
             }
         }
     }

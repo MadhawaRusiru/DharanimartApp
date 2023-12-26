@@ -69,7 +69,13 @@ public class Home extends AppCompatActivity {
 
         LoadCategories loadCategories = new LoadCategories();
         loadCategories.execute();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LoadCategories loadCategories = new LoadCategories();
+        loadCategories.execute();
     }
 
     public class LoadCategories extends AsyncTask<String, Void, List<Category>> {
@@ -133,6 +139,7 @@ public class Home extends AppCompatActivity {
                 gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        categoryListAdaptor.cancelAllTasks();
                         Intent catView = new Intent(getApplicationContext(), CategoryView.class);
                         catView.putExtra("CATEGORY", new Gson().toJson(categories.get(position)));
                         startActivity(catView);

@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import lk.dharanimart.mobile.R;
@@ -41,11 +42,14 @@ public class ProductListAdaptor extends BaseAdapter {
     ImageView productImg;
     ProgressBar progressBar;
 
+    private List<LoadPicture> downloadTasks;
+
     public ProductListAdaptor(Context context, List<Product> productList) {
         this.context = context;
         this.productList = productList;
         inflater = LayoutInflater.from(context);
         SiteUrl = context.getResources().getString(R.string.siteurl);
+        downloadTasks = new ArrayList<>();
     }
 
     @Override
@@ -110,10 +114,15 @@ public class ProductListAdaptor extends BaseAdapter {
 
         LoadPicture loadPicture = new LoadPicture(productImg,progressBar);
         loadPicture.execute(product.getImages().get(0), SiteUrl);
-
+        downloadTasks.add(loadPicture);
         return convertView;
     }
-
+    public void cancelAllTasks() {
+        for (LoadPicture task : downloadTasks) {
+            task.cancel(true);
+        }
+        downloadTasks.clear();
+    }
     public static class LoadPicture extends AsyncTask<String, Void, Bitmap> {
 
         private final WeakReference<ImageView> imageViewReference;
