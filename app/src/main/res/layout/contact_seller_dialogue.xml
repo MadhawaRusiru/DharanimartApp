@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="128dp"
+        android:background="@drawable/rounded_background"
+        android:backgroundTint="#FFFFFF"
+        android:backgroundTintMode="add"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvSellerNameWithMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Seller"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/textView15"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btnContact"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#00FFFFFF"
+            android:scaleType="fitXY"
+            app:layout_constraintEnd_toStartOf="@+id/btnMessage"
+            app:layout_constraintStart_toEndOf="@+id/btnWhatsapp"
+            app:layout_constraintTop_toBottomOf="@+id/tvMessage"
+            app:srcCompat="@drawable/phone" />
+
+        <ImageButton
+            android:id="@+id/btnMessage"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:backgroundTint="#00FFFFFF"
+            android:scaleType="fitXY"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvSellerNameWithMessage"
+            app:srcCompat="@drawable/message" />
+
+        <ImageButton
+            android:id="@+id/btnWhatsapp"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_marginStart="16dp"
+            android:backgroundTint="#00FFFFFF"
+            android:scaleType="fitXY"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btnMessage"
+            app:srcCompat="@drawable/whatsapp" />
+
+        <TextView
+            android:id="@+id/tvWhatsapp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="#00FFFFFF"
+            android:text="Not available"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="@+id/btnWhatsapp"
+            app:layout_constraintStart_toStartOf="@+id/btnWhatsapp"
+            app:layout_constraintTop_toBottomOf="@+id/btnWhatsapp" />
+
+        <TextView
+            android:id="@+id/tvContact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:shadowColor="#020202"
+            android:text="Not available"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="@+id/btnContact"
+            app:layout_constraintStart_toStartOf="@+id/btnContact"
+            app:layout_constraintTop_toBottomOf="@+id/btnContact" />
+
+        <TextView
+            android:id="@+id/tvMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Not available"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="@+id/btnMessage"
+            app:layout_constraintStart_toStartOf="@+id/btnMessage"
+            app:layout_constraintTop_toBottomOf="@+id/btnMessage" />
+
+        <Button
+            android:id="@+id/btnCloseDialogue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="Close"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvContact" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="Contact "
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/tvSellerNameWithMessage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvSellerNameWithMessage" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text=" for more information"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/tvSellerNameWithMessage"
+            app:layout_constraintTop_toTopOf="@+id/tvSellerNameWithMessage" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,7 @@
 package lk.dharanimart.mobile;
 
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -19,17 +20,21 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,8 +42,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -54,8 +61,14 @@ public class ProductView extends AppCompatActivity {
     private ValueCallback<Uri[]> uploadMessage;
     private static final int FILE_CHOOSER_REQUEST_CODE = 1;
 
-
+    public ProgressBar[] progressBar;
+    public LinearLayout lnrImageContainer;
+    public int x;
     WebView wbDescription, wbComments;
+
+
+    int smallerSize = 128;
+
 
     ArrayList<ImageDownloadTask> imageDownloadTasks;
 
@@ -63,6 +76,8 @@ public class ProductView extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_view);
+
+        x = 0;
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
@@ -74,7 +89,7 @@ public class ProductView extends AppCompatActivity {
         Gson gson = new Gson();
         product = gson.fromJson(productString, Product.class);
 
-        LinearLayout lnrImageContainer = findViewById(R.id.lnrProductViewImageContainer);
+        lnrImageContainer = findViewById(R.id.lnrProductViewImageContainer);
         mainImageView = findViewById(R.id.imgProductViewMainImageView);
         wbDescription = findViewById(R.id.wbProductViewDescription);
         wbComments  = findViewById(R.id.wbProductViewComments);
@@ -187,28 +202,40 @@ public class ProductView extends AppCompatActivity {
             }
         });
 
-        String[] imageUrls = new String[product.getImages().size()];
-        for (int i = 0; i < product.getImages().size(); i++) {
+        int imgCount = product.getImages().size();
+        String[] imageUrls = new String[imgCount];
+        progressBar = new ProgressBar[imgCount];
+
+        for (int i = 0; i < imgCount; i++) {
             imageUrls[i] = product.getImages().get(i);
+            progressBar[i] = new ProgressBar(this);
+            lnrImageContainer.addView(progressBar[i]);
         }
-        int smallerSize = 96;
+
+
 
         imageDownloadTasks = new ArrayList<>();
-        for (String imageUrl : imageUrls) {
+        x = 0;
+        for (int i = 0; i < imgCount; i++) {
             ImageView imageView = new ImageView(this);
-            ImageDownloadTask imageDownloadTask = new ImageDownloadTask(imageView, this);
-            imageDownloadTask.execute(imageUrl);
-            imageDownloadTasks.add(imageDownloadTask);
             imageView.setLayoutParams(new LinearLayout.LayoutParams(
                     smallerSize,
                     smallerSize));
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mainImageView.setImageDrawable(imageView.getDrawable());
+                    if (mainImageView != null) {
+                        mainImageView.setImageDrawable(imageView.getDrawable());
+                    }
                 }
             });
             lnrImageContainer.addView(imageView);
+
+            // Start the image download task
+            ImageDownloadTask imageDownloadTask = new ImageDownloadTask( progressBar[i], imageView,this);
+            imageDownloadTask.execute(imageUrls[i]);
+            imageDownloadTasks.add(imageDownloadTask);
+
         }
 
         ImageButton btnMyShop = findViewById(R.id.btnProductViewMyShop);
@@ -220,6 +247,14 @@ public class ProductView extends AppCompatActivity {
                 Log.d("MY_LOG",product.getMembership());
                 intent.putExtra("MEMBER_NAME", product.getSeller_name());
                 startActivity(intent);
+            }
+        });
+
+        Button btnBuy = findViewById(R.id.btnBuyNow);
+        btnBuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showContactDialog(product.getWhatsapp(), product.getContact(), product.getSms(), product.getSeller_name());
             }
         });
     }
@@ -309,6 +344,99 @@ public class ProductView extends AppCompatActivity {
 
         dialog.show();
     }
+    private void showContactDialog(String whatsapp, String mobile, String message, String sellerName) {
+        final Dialog dialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.contact_seller_dialogue);
+
+        TextView tvWhatsapp = dialog.findViewById(R.id.tvWhatsapp);
+        TextView tvContact = dialog.findViewById(R.id.tvContact);
+        TextView tvMessage = dialog.findViewById(R.id.tvMessage);
+        TextView tvSellerName = dialog.findViewById(R.id.tvSellerNameWithMessage);
+
+        Button btnClose = dialog.findViewById(R.id.btnCloseDialogue);
+        ImageButton btnWhatsapp = dialog.findViewById(R.id.btnWhatsapp);
+        ImageButton btnContact = dialog.findViewById(R.id.btnContact);
+        ImageButton btnMessage = dialog.findViewById(R.id.btnMessage);
+
+        String content = "Request information about Product ID:"+ product.getPro_id() + " http://dharanimart.lk/shortLink.php?id=" + product.getPro_id();
+
+        btnWhatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openWhatsappChat(whatsapp, content);
+            }
+        });
+        btnContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openCallApp(mobile);
+            }
+        });
+        btnMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMessageApp(message, content);
+            }
+        });
+
+        if (!whatsapp.equals(""))
+            tvWhatsapp.setText(whatsapp);
+        else
+            tvWhatsapp.setText("Whatsapp not available.");
+
+        if (!mobile.equals(""))
+            tvContact.setText(mobile);
+        else
+            tvContact.setText("Call not available.");
+
+        if (!message.equals(""))
+            tvMessage.setText(message);
+        else
+            tvMessage.setText("Message not available.");
+
+        if (!sellerName.equals(""))
+            tvSellerName.setText(sellerName);
+
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+    private void openWhatsappChat(String phoneNumber, String message) {
+        try {
+            String url = "https://api.whatsapp.com/send?phone=" + phoneNumber + "&text=" + URLEncoder.encode(message, "UTF-8");
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+            startActivity(intent);
+        } catch (ActivityNotFoundException | UnsupportedEncodingException e) {
+            // Handle exception if Whatsapp is not installed or encoding fails
+            Toast.makeText(this, "Whatsapp is not installed or encoding failed", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void openMessageApp(String phoneNumber, String message) {
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + phoneNumber));
+            intent.putExtra("sms_body", message);
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            // Handle exception if the messaging app is not available
+            Toast.makeText(this, "Messaging app not available", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void openCallApp(String phoneNumber) {
+        try {
+            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            // Handle exception if the dialer app is not available
+            Toast.makeText(this, "Dialer app not available", Toast.LENGTH_SHORT).show();
+        }
+    }
     private void setZoomableImageListeners(final ImageView imageView) {
         // Set up GestureDetector for detecting gestures
         final GestureDetector gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
@@ -346,12 +474,14 @@ public class ProductView extends AppCompatActivity {
         });
     }
 
-    private static class ImageDownloadTask extends AsyncTask<String, Void, Bitmap> {
+    private class ImageDownloadTask extends AsyncTask<String, Void, Bitmap> {
         private final WeakReference<ImageView> imageViewReference;
+        private final WeakReference<ProgressBar> progressBarWeakReference;
         private final WeakReference<Context> contextReference;
 
-        ImageDownloadTask(ImageView imageView, Context context) {
+        ImageDownloadTask(ProgressBar progressBar, ImageView imageView, Context context) {
             imageViewReference = new WeakReference<>(imageView);
+            progressBarWeakReference = new WeakReference<>(progressBar);
             contextReference = new WeakReference<>(context);
         }
 
@@ -369,14 +499,19 @@ public class ProductView extends AppCompatActivity {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             ImageView imageView = imageViewReference.get();
+            ProgressBar progressBar = progressBarWeakReference.get();
 
             if (imageView != null && bitmap != null) {
                 imageView.setImageBitmap(bitmap);
-                if(mainImageView.getVisibility() == View.INVISIBLE){
+                if (mainImageView.getVisibility() == View.INVISIBLE) {
                     mainImageView.setVisibility(View.VISIBLE);
                     mainImageView.setImageDrawable(imageView.getDrawable());
                 }
+
+//                lnrImageContainer.removeView(lnrImageContainer.getChildAt(lnrImageContainer.getChildCount() - x -1));
+                lnrImageContainer.removeView(progressBar);
             }
         }
     }
+
 }
