@@ -9,7 +9,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="320dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="128dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/rounded_background"
         android:backgroundTint="#FFFFFF"
         android:backgroundTintMode="add"
@@ -18,28 +20,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/tvSellerNameWithMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Seller"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/textView15"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <ImageButton
             android:id="@+id/btnContact"
             android:layout_width="96dp"
             android:layout_height="96dp"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="#00FFFFFF"
+            android:backgroundTint="#FFFFFF"
             android:scaleType="fitXY"
             app:layout_constraintEnd_toStartOf="@+id/btnMessage"
-            app:layout_constraintStart_toEndOf="@+id/btnWhatsapp"
-            app:layout_constraintTop_toBottomOf="@+id/tvMessage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btnMessage"
             app:srcCompat="@drawable/phone" />
 
         <ImageButton
@@ -47,22 +36,23 @@
             android:layout_width="96dp"
             android:layout_height="96dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:backgroundTint="#00FFFFFF"
+            android:layout_marginEnd="32dp"
+            android:backgroundTint="#FFFFFF"
             android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvSellerNameWithMessage"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
             app:srcCompat="@drawable/message" />
 
         <ImageButton
             android:id="@+id/btnWhatsapp"
             android:layout_width="96dp"
             android:layout_height="96dp"
-            android:layout_marginStart="16dp"
-            android:backgroundTint="#00FFFFFF"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#FFFFFF"
             android:scaleType="fitXY"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/btnMessage"
+            app:layout_constraintEnd_toStartOf="@+id/btnMessage"
+            app:layout_constraintStart_toEndOf="@+id/btnContact"
+            app:layout_constraintTop_toBottomOf="@+id/tvMessage"
             app:srcCompat="@drawable/whatsapp" />
 
         <TextView
@@ -104,6 +94,7 @@
             android:id="@+id/btnCloseDialogue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
             android:text="Close"
@@ -111,31 +102,29 @@
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvContact" />
+            app:layout_constraintTop_toBottomOf="@+id/tvWhatsapp" />
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="Contact "
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@+id/tvSellerNameWithMessage"
+        <LinearLayout
+            android:id="@+id/linearLayout4"
+            android:layout_width="0dp"
+            android:layout_height="22dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tvSellerNameWithMessage" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textView15"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text=" for more information"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintStart_toEndOf="@+id/tvSellerNameWithMessage"
-            app:layout_constraintTop_toTopOf="@+id/tvSellerNameWithMessage" />
+            <TextView
+                android:id="@+id/tvSellerNameWithMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Seller"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

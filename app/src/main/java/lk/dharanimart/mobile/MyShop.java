@@ -4,16 +4,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -25,14 +26,15 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
-import lk.dharanimart.mobile.Adaptors.CategoryListAtaptor;
 import lk.dharanimart.mobile.Adaptors.ProductListAdaptor;
 import lk.dharanimart.mobile.Responses.Category;
 import lk.dharanimart.mobile.Responses.CategoryResponse;
@@ -70,16 +72,23 @@ public class MyShop extends AppCompatActivity {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
 
+        imgCateogryIcon = findViewById(R.id.imgMyShopX);
+        progressBar = findViewById(R.id.pbMyShopLoadCat);
+
         sharedPreferences = getSharedPreferences("DharanimartApp",MODE_PRIVATE);
 
         SiteUrl = getResources().getString(R.string.siteurl);
 
+        membership = getIntent().getStringExtra("MEMBER");
+        String memberName = getIntent().getStringExtra("MEMBER_NAME");
 
+        LoadPicture loadPicture = new LoadPicture(imgCateogryIcon,progressBar);
+        loadPicture.execute(SiteUrl + "/APP/API/?S=GET_MEMBER_IMG&MEMBER=" + membership);
+        Log.d("MY_LOG",SiteUrl + "/APP/API/?S=GET_MEMBER_IMG&MEMBER=" + membership);
 
         gridView = findViewById(R.id.lvSearchCategoryView);
 
-        membership = getIntent().getStringExtra("MEMBER");
-        String memberName = getIntent().getStringExtra("MEMBER_NAME");
+
         LoadCategories loadCategories = new LoadCategories();
         loadCategories.execute();
 
@@ -95,8 +104,17 @@ public class MyShop extends AppCompatActivity {
         ImageButton btnShareWa = findViewById(R.id.btnMyShopShareWa);
         ImageButton btnShareMsg = findViewById(R.id.btnMyShopShareMsg);
         ImageButton btnShareIns = findViewById(R.id.btnMyShopShareIns);
+        ImageButton btnShareAll = findViewById(R.id.imgBtnShareMyShop);
+
 
         String shopLink = "https://www.dharanimart.lk/index.php?page=memView&member="+ membership +"&s=" + memberName;
+
+        btnShareAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareMyShop(shopLink);
+            }
+        });
 
         btnShareFb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,6 +158,23 @@ public class MyShop extends AppCompatActivity {
         LoadProducts loadProducts = new LoadProducts();
         loadProducts.execute();
 
+    }
+    private void shareMyShop(String link) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+
+        // Set the text message with the link
+        String message = "Check out this product: " + link;
+        shareIntent.putExtra(Intent.EXTRA_TEXT, message);
+
+        // Start the system sharing dialogue
+        try {
+            startActivity(Intent.createChooser(shareIntent, "Share Product via"));
+        } catch (android.content.ActivityNotFoundException ex) {
+            // Handle exception when no suitable app is installed
+            // You may want to show a message to the user
+            ex.printStackTrace();
+        }
     }
     private void shareOnFacebook(String shopLink) {
         Intent intent = new Intent(Intent.ACTION_SEND);
@@ -430,6 +465,70 @@ public class MyShop extends AppCompatActivity {
                     }
                 });
 
+            }
+        }
+    }
+
+    public static class LoadPicture extends AsyncTask<String, Void, Bitmap> {
+
+        private final WeakReference<ImageView> imageViewReference;
+        private final WeakReference<ProgressBar> progressBarReferance;
+        private static LruCache<String, Bitmap> memoryCache;
+
+        static {
+            // Initialize the cache with 1/8 of the available memory
+            int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+            int cacheSize = maxMemory / 8;
+            memoryCache = new LruCache<>(cacheSize);
+        }
+
+        LoadPicture(ImageView imageView, ProgressBar progressBar) {
+            imageViewReference = new WeakReference<>(imageView);
+            progressBarReferance = new  WeakReference<>(progressBar);
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... strings) {
+            String imageUrl = strings[0];
+//            imageUrl = "https://dharanimart.lk/img/member_pic/avatar.jpg";
+
+            Log.e("CAT_ICON", "Post-process");
+
+
+            // Check if the image is available in the memory cache
+            Bitmap cachedBitmap = memoryCache.get(imageUrl);
+            if (cachedBitmap != null) {
+                return cachedBitmap;
+            }
+
+            try {
+                InputStream inputStream = new URL(imageUrl).openStream();
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+
+                // Cache the bitmap in memory
+                if (bitmap != null) {
+                    memoryCache.put(imageUrl, bitmap);
+                }
+
+                return bitmap;
+            } catch (IOException e) {
+                Log.e("CAT_ICON", "Error while loading. Icon: " + strings[0]);
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap imageBitmap) {
+            Log.e("CAT_ICON", "Post-process");
+
+            // Update the UI with the loaded image
+            if (imageBitmap != null) {
+                ImageView imageView = imageViewReference.get();
+                ProgressBar progressBar = progressBarReferance.get();
+                if (imageView != null) {
+                    imageView.setImageBitmap(imageBitmap);
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
             }
         }
     }

@@ -10,7 +10,7 @@ import android.view.WindowManager;
 
 public class Splash extends AppCompatActivity {
 
-    private static final int SPLASH_DELAY = 2000;
+    private static final int SPLASH_DELAY = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

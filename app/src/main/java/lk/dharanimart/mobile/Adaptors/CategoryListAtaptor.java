@@ -21,6 +21,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import lk.dharanimart.mobile.Home;
 import lk.dharanimart.mobile.R;
 import lk.dharanimart.mobile.Responses.Category;
 
@@ -32,15 +33,19 @@ public class CategoryListAtaptor extends BaseAdapter {
     String SiteUrl;
     ImageView catIcon;
     ProgressBar progressBar;
+    static int completedTaskCount = 0;
+    static int currentTasksCount = 0;
+    static Home homeActivity;
 
     private List<LoadPicture> downloadTasks;
 
-    public CategoryListAtaptor(Context context, List<Category> categoryList) {
+    public CategoryListAtaptor(Context context, List<Category> categoryList, Home home) {
         this.context = context;
         this.categoryList = categoryList;
         inflater = LayoutInflater.from(context);
         SiteUrl = context.getResources().getString(R.string.siteurl);
         downloadTasks = new ArrayList<>();
+        homeActivity = home;
     }
 
     @Override
@@ -67,6 +72,8 @@ public class CategoryListAtaptor extends BaseAdapter {
 
         Category category = categoryList.get(position);
         categoryTitle.setText(category.getName());
+
+        currentTasksCount = categoryList.size();
 
         LoadPicture loadPicture = new LoadPicture(catIcon,progressBar);
         downloadTasks.add(loadPicture);
@@ -126,12 +133,20 @@ public class CategoryListAtaptor extends BaseAdapter {
         @Override
         protected void onPostExecute(Bitmap imageBitmap) {
             // Update the UI with the loaded image
+            completedTaskCount++;
             if (imageBitmap != null) {
                 ImageView imageView = imageViewReference.get();
                 ProgressBar progressBar = progressBarReferance.get();
                 if (imageView != null) {
                     imageView.setImageBitmap(imageBitmap);
                     progressBar.setVisibility(View.INVISIBLE);
+                    if(completedTaskCount >= currentTasksCount){
+                        homeActivity.closeLoader();
+
+
+                        completedTaskCount = 0;
+                        currentTasksCount = 0;
+                    }
                 }
             }
         }

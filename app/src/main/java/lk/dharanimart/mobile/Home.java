@@ -2,6 +2,7 @@ package lk.dharanimart.mobile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewStub;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -39,6 +41,7 @@ public class Home extends AppCompatActivity {
     public CategoryListAtaptor categoryListAdaptor;
     GridView gridView;
     SharedPreferences sharedPreferences;
+    private static Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +70,12 @@ public class Home extends AppCompatActivity {
             }
         });
 
+
+        dialog = new Dialog(this, android.R.style.Animation_Activity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        dialog.setContentView(R.layout.loading_screen);
+
         LoadCategories loadCategories = new LoadCategories();
         loadCategories.execute();
     }
@@ -78,7 +87,16 @@ public class Home extends AppCompatActivity {
         loadCategories.execute();
     }
 
+    public void closeLoader() {
+        dialog.dismiss();
+    }
+
     public class LoadCategories extends AsyncTask<String, Void, List<Category>> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.show();
+        }
 
         @Override
         protected List<Category> doInBackground(String... strings) {
@@ -132,7 +150,7 @@ public class Home extends AppCompatActivity {
             if (categories != null) {
                 categoryList = categories;
 
-                categoryListAdaptor = new CategoryListAtaptor(Home.this, categories);
+                categoryListAdaptor = new CategoryListAtaptor(Home.this, categories, Home.this);
                 gridView.setAdapter(categoryListAdaptor);
                 Log.d("MY_TAG", categories.get(0).getName());
 
@@ -145,7 +163,9 @@ public class Home extends AppCompatActivity {
                         startActivity(catView);
                     }
                 });
-            }
+
             }
         }
     }
+
+}

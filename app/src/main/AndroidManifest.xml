@@ -26,17 +26,24 @@
         <activity
             android:name=".Splash"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                    <action android:name="android.intent.action.VIEW" />
+
+                    <category android:name="android.intent.category.DEFAULT" />
+                    <category android:name="android.intent.category.BROWSABLE" />
+
+                    <data
+                        android:scheme="https"
+                        android:host="www.dharanimart.lk" />
+
+                <data
+                    android:scheme="https"
+                    android:host="dharanimart.lk" />
             </intent-filter>
 
             <meta-data
@@ -63,7 +70,12 @@
         <activity
             android:name=".Home"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="false">
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+
+            </intent-filter>
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

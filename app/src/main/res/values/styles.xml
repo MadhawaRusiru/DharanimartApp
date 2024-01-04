@@ -2,8 +2,11 @@
 <resources>
 
     <style name="CustomBuyButton">
-        <item name="android:background">@color/BuyButtonBack</item>
+        <item name="android:backgroundTint">@color/BuyButtonBack</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">24sp</item>
+        <item name="android:radius">10dp</item>
+        <item name="android:layout_height">72dp</item>
+        <item name="android:radioButtonStyle">@drawable/rounded_background</item>
     </style>
 </resources>

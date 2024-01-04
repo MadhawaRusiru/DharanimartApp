@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StrikethroughSpan;
@@ -128,6 +129,7 @@ public class ProductView extends AppCompatActivity {
         TextView tvProductNo = findViewById(R.id.tvProductViewProNum);
         TextView tvCategory = findViewById(R.id.tvProductViewCategory);
         TextView tvAddress = findViewById(R.id.tvProductViewAddress);
+        TextView tvSellerName = findViewById(R.id.tvProductViewProSeller);
         TextView tvProductRealPrice = findViewById(R.id.tvProductViewRealPrice);
         TextView tvDiscount = findViewById(R.id.tvProductViewDiscount);
         TextView tvAvailability = findViewById(R.id.tvProductViewAvailability);
@@ -147,12 +149,12 @@ public class ProductView extends AppCompatActivity {
                 break;
         }
 
-        tvAddress.setText(product.getAddress());
+
+        tvAddress.setText(Html.fromHtml(product.getAddress()));
         tvCategory.setText(product.getCat());
         tvProductNo.setText(String.valueOf(product.getPro_id()));
-
-
-
+        tvTitle.setText(product.getTitle());
+        tvSellerName.setText(product.getSeller_name());
 
         tvPrice.setText(formattedPrice);
 //
@@ -179,7 +181,8 @@ public class ProductView extends AppCompatActivity {
             lnrProductViewDiscountInfo.removeView(tvProductRealPrice);
             lnrProductViewDiscountInfo.setPadding(0, 0, 0,0);
             tvPrice.setText("Rs." + String.valueOf(numberFormat.format(price)) + ".00");
-        } else {
+        }
+        else {
             tvDiscount.setVisibility(View.INVISIBLE);
             tvProductRealPrice.setVisibility(View.INVISIBLE);
             LinearLayout lnrProductViewDiscountInfo = findViewById(R.id.lnrProductViewDiscountInfo);
@@ -192,7 +195,6 @@ public class ProductView extends AppCompatActivity {
             lnrMainScroll.removeView(findViewById(R.id.ProductViewtextView4));
         }
 //
-        tvTitle.setText(product.getTitle());
         wbDescription.loadData("<html><body style='max-width:100%;overflow:hidden;'><div style='max-width:100vw;overflow:hidden;'><style>iframe{width:100vw;}</style>" + product.getDescription() + "</div></body></html>", "text/html", "UTF-8");
 
         mainImageView.setOnClickListener(new View.OnClickListener() {
@@ -257,6 +259,15 @@ public class ProductView extends AppCompatActivity {
                 showContactDialog(product.getWhatsapp(), product.getContact(), product.getSms(), product.getSeller_name());
             }
         });
+
+        ImageButton btnShare = findViewById(R.id.imgBtnShare);
+        btnShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareProduct("https://dharanimart.lk/shortLink.php?id=" + product.getPro_id());
+            }
+        });
+
     }
     @Override
     protected void onPause() {
@@ -345,7 +356,9 @@ public class ProductView extends AppCompatActivity {
         dialog.show();
     }
     private void showContactDialog(String whatsapp, String mobile, String message, String sellerName) {
+
         final Dialog dialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.contact_seller_dialogue);
 
@@ -395,9 +408,13 @@ public class ProductView extends AppCompatActivity {
         else
             tvMessage.setText("Message not available.");
 
-        if (!sellerName.equals(""))
-            tvSellerName.setText(sellerName);
+        if (!sellerName.equals("")) {
+            // Format the text using HTML to make only the seller's name bold
+            String formattedText = "Contact <b>" + sellerName + "</b> for more information.";
 
+            // Set the formatted text to the TextView using Html.fromHtml
+            tvSellerName.setText(Html.fromHtml(formattedText));
+        }
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -437,6 +454,25 @@ public class ProductView extends AppCompatActivity {
             Toast.makeText(this, "Dialer app not available", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void shareProduct(String link) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+
+        // Set the text message with the link
+        String message = "Check out this product: " + link;
+        shareIntent.putExtra(Intent.EXTRA_TEXT, message);
+
+        // Start the system sharing dialogue
+        try {
+            startActivity(Intent.createChooser(shareIntent, "Share Product via"));
+        } catch (android.content.ActivityNotFoundException ex) {
+            // Handle exception when no suitable app is installed
+            // You may want to show a message to the user
+            ex.printStackTrace();
+        }
+    }
+
     private void setZoomableImageListeners(final ImageView imageView) {
         // Set up GestureDetector for detecting gestures
         final GestureDetector gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {

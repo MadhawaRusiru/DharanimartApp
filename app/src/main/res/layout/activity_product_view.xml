@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="#989898"
     tools:context=".ProductView">
 
     <ImageView
@@ -70,7 +71,6 @@
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#ECE8E8"
                 android:fadingEdge="horizontal"
                 android:minHeight="64dp">
 
@@ -133,18 +133,19 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/btnBuyNow"
                 style="@style/CustomBuyButton"
                 android:layout_width="match_parent"
-                android:layout_height="64dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="0dp"
+                android:backgroundTint="#AC001B"
                 android:text="Buy Now"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                app:cornerRadius="5dp" />
 
 
             <TextView
@@ -156,54 +157,36 @@
                 android:layout_marginTop="8dp"
                 android:text="*  Contact Seller to buy." />
 
-            <ImageButton
-                android:id="@+id/btnProductViewMyShop"
-                android:layout_width="128dp"
-                android:layout_height="128dp"
-                android:backgroundTint="#FFFFFF"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/my_shop" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="bottom|end"
                 android:orientation="horizontal">
 
                 <ImageButton
-                    android:id="@+id/imageButton2"
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:backgroundTint="#00FFFFFF"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/wa" />
+                    android:id="@+id/btnProductViewMyShop"
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
+                    android:backgroundTint="#FFFFFF"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/my_shop" />
 
-                <ImageButton
-                    android:id="@+id/imageButton"
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:backgroundTint="#00FFFFFF"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/fb" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center|center_horizontal|center_vertical|end"
+                    android:orientation="horizontal">
 
-                <ImageButton
-                    android:id="@+id/imageButton3"
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:backgroundTint="#00FFFFFF"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/fbm" />
+                    <ImageButton
+                        android:id="@+id/imgBtnShare"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_marginEnd="48dp"
+                        android:backgroundTint="#FFFFFF"
+                        android:foregroundGravity="bottom|right"
+                        app:srcCompat="@drawable/ic_baseline_share_24" />
+                </LinearLayout>
 
-                <ImageButton
-                    android:id="@+id/imageButton4"
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:backgroundTint="#00FFFFFF"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/insta" />
             </LinearLayout>
 
             <TextView
@@ -240,12 +223,12 @@
                     android:id="@+id/tvProductViewProNum"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
+                    android:fontFamily="sans-serif"
                     android:padding="10dp"
                     android:paddingStart="40dp"
                     android:text="152"
                     android:textColor="#000000"
-                    android:textSize="24sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/textView9"
@@ -259,12 +242,12 @@
                     android:id="@+id/tvProductViewCategory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
+                    android:fontFamily="sans-serif"
                     android:padding="10dp"
                     android:paddingStart="40dp"
                     android:text="Mobile Phones"
                     android:textColor="#000000"
-                    android:textSize="24sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/textView8"
@@ -278,12 +261,12 @@
                     android:id="@+id/tvProductViewProSeller"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
+                    android:fontFamily="sans-serif"
                     android:padding="10dp"
                     android:paddingStart="40dp"
                     android:text="Success Mobile"
                     android:textColor="#000000"
-                    android:textSize="24sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/textView11"
@@ -297,12 +280,12 @@
                     android:id="@+id/tvProductViewAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
+                    android:fontFamily="sans-serif"
                     android:padding="10dp"
                     android:paddingStart="40dp"
-                    android:text="Success Mobile \nRatnapura Road, \nKalawana"
+                    android:text="Address Line 01 \nAddress Line 2\nSri Lanka"
                     android:textColor="#000000"
-                    android:textSize="20sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/textView12"
@@ -316,12 +299,12 @@
                     android:id="@+id/tvProductViewMembershipNo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
+                    android:fontFamily="sans-serif"
                     android:padding="10dp"
                     android:paddingStart="40dp"
                     android:text="1070"
                     android:textColor="#000000"
-                    android:textSize="24sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/textView13"
@@ -335,12 +318,12 @@
                     android:id="@+id/tvProductViewDateAdded"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
+                    android:fontFamily="sans-serif"
                     android:padding="10dp"
                     android:paddingStart="40dp"
                     android:text="2023-10-15 17:47:21"
                     android:textColor="#000000"
-                    android:textSize="24sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/textView14"
