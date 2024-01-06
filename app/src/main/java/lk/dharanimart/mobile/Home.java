@@ -94,14 +94,14 @@ public class Home extends AppCompatActivity {
                 dlgYourAddHere.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
                 dlgYourAddHere.setContentView(R.layout.your_ad_here);
 
-                Button btnClose = dialog.findViewById(R.id.btnCloseDialogue);
+                Button btnClose = dlgYourAddHere.findViewById(R.id.btnCloseDialogue);
                 ImageButton btnYourAdHereWa = dlgYourAddHere.findViewById(R.id.btnYourAdHereWhatsapp);
                 ImageButton btnYourAdHereGf = dlgYourAddHere.findViewById(R.id.btnYourAdHereMessage);
 
                 btnClose.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        dialog.dismiss();
+                        dlgYourAddHere.dismiss();
                     }
                 });
                 btnYourAdHereWa.setOnClickListener(new View.OnClickListener() {
@@ -215,7 +215,6 @@ public class Home extends AppCompatActivity {
                 gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        categoryListAdaptor.cancelAllTasks();
                         Intent catView = new Intent(getApplicationContext(), CategoryView.class);
                         catView.putExtra("CATEGORY", new Gson().toJson(categories.get(position)));
                         startActivity(catView);

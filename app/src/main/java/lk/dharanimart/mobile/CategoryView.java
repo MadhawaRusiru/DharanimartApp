@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -52,11 +53,9 @@ public class CategoryView extends AppCompatActivity {
     TextView tvCategoryTitle;
     ImageView imgCateogryIcon;
     EditText etvSearchKey;
-    ProgressBar progressBar;
     String SiteUrl;
     static ProductListAdaptor productListAdaptor;
     GridView gridView;
-    public  Executor executor;
 
     public int selectedCat = 0;
     public int selectedSubCat = 0;
@@ -85,7 +84,6 @@ public class CategoryView extends AppCompatActivity {
 
         tvCategoryTitle = findViewById(R.id.tvCategoryTitle);
         imgCateogryIcon = findViewById(R.id.imgCategoryIconView);
-        progressBar = findViewById(R.id.pbLoadCat);
 
         etvSearchKey = findViewById(R.id.tvCatSearch);
 
@@ -97,8 +95,7 @@ public class CategoryView extends AppCompatActivity {
             selectedCat = category.getId();
             tvCategoryTitle.setText(category.getName());
 
-            LoadPicture loadPicture = new LoadPicture(imgCateogryIcon,progressBar);
-            loadPicture.execute(category.getIcon(), SiteUrl);
+            imgCateogryIcon.setImageDrawable(getCatIcon(category.getId()));
         }
 
         String[] subCatArray = new String[category.getSubcat().size()];
@@ -186,7 +183,10 @@ public class CategoryView extends AppCompatActivity {
         loadProducts.execute();
 
     }
-
+    private Drawable getCatIcon(int id) {
+        int resourceId = getResources().getIdentifier("cat_" + id, "drawable", getPackageName());
+        return getDrawable(resourceId);
+    }
     public class LoadProducts extends AsyncTask<String, Void, List<Product>> {
 
         @Override
@@ -262,61 +262,4 @@ public class CategoryView extends AppCompatActivity {
         }
     }
 
-    public static class LoadPicture extends AsyncTask<String, Void, Bitmap> {
-
-        private final WeakReference<ImageView> imageViewReference;
-        private final WeakReference<ProgressBar> progressBarReferance;
-        private static LruCache<String, Bitmap> memoryCache;
-
-        static {
-            // Initialize the cache with 1/8 of the available memory
-            int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-            int cacheSize = maxMemory / 8;
-            memoryCache = new LruCache<>(cacheSize);
-        }
-
-        LoadPicture(ImageView imageView, ProgressBar progressBar) {
-            imageViewReference = new WeakReference<>(imageView);
-            progressBarReferance = new  WeakReference<>(progressBar);
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            String imageUrl = strings[1] + "/img/cat_app_img/" + strings[0];
-
-            // Check if the image is available in the memory cache
-            Bitmap cachedBitmap = memoryCache.get(imageUrl);
-            if (cachedBitmap != null) {
-                return cachedBitmap;
-            }
-
-            try {
-                InputStream inputStream = new URL(imageUrl).openStream();
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-
-                // Cache the bitmap in memory
-                if (bitmap != null) {
-                    memoryCache.put(imageUrl, bitmap);
-                }
-
-                return bitmap;
-            } catch (IOException e) {
-                Log.e("CAT_ICON", "Error while loading. Icon: " + strings[0]);
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap imageBitmap) {
-            // Update the UI with the loaded image
-            if (imageBitmap != null) {
-                ImageView imageView = imageViewReference.get();
-                ProgressBar progressBar = progressBarReferance.get();
-                if (imageView != null) {
-                    imageView.setImageBitmap(imageBitmap);
-                    progressBar.setVisibility(View.INVISIBLE);
-                }
-            }
-        }
-    }
 }

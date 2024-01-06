@@ -57,16 +57,32 @@ public class ProductView extends AppCompatActivity {
 
     public Product product;
     private static ImageView mainImageView;
-    private Matrix matrix = new Matrix();
     private PointF lastTouchPoint = new PointF();
     private ValueCallback<Uri[]> uploadMessage;
     private static final int FILE_CHOOSER_REQUEST_CODE = 1;
+
+    private static final int INVALID_POINTER_ID = -1;
+    private Matrix matrix = new Matrix();
+    private float[] matrixValues = new float[9];
+    private float lastTouchX, lastTouchY;
+    private int activePointerId = INVALID_POINTER_ID;
+    private float initialDistance = 0f;
+    ImageView popupImageView;
+
+    private GestureDetector gestureDetector;
+    private static final long DOUBLE_TAP_TIMEOUT = 200; // Adjust as needed
+    private long lastTapTime = 0;
+
+
+    private static final float MAX_ZOOM_FACTOR = 2.0f;
+    private static final float MIN_ZOOM_FACTOR = 0.5f;
 
     public ProgressBar[] progressBar;
     public LinearLayout lnrImageContainer;
     public int x;
     WebView wbDescription, wbComments;
 
+    private ScaleGestureDetector scaleGestureDetector;
 
     int smallerSize = 128;
 
@@ -267,7 +283,8 @@ public class ProductView extends AppCompatActivity {
                 shareProduct("https://dharanimart.lk/shortLink.php?id=" + product.getPro_id());
             }
         });
-
+        scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
+        gestureDetector = new GestureDetector(this, new GestureListener());
     }
     @Override
     protected void onPause() {
@@ -288,7 +305,13 @@ public class ProductView extends AppCompatActivity {
             startActivityForResult(intent, FILE_CHOOSER_REQUEST_CODE);
         }
     }
-
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        gestureDetector.onTouchEvent(event);
+        scaleGestureDetector.onTouchEvent(event);
+        handleTouch(event);
+        return true;
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -311,28 +334,107 @@ public class ProductView extends AppCompatActivity {
         }
     }
     private void handleTouch(MotionEvent event) {
-        // Handle pan gestures
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
-                lastTouchPoint.set(event.getX(), event.getY());
+                activePointerId = event.getPointerId(0);
+                lastTouchX = event.getX();
+                lastTouchY = event.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                float dx = event.getX() - lastTouchPoint.x;
-                float dy = event.getY() - lastTouchPoint.y;
-                matrix.postTranslate(dx, dy);
-                mainImageView.setImageMatrix(matrix);
-                lastTouchPoint.set(event.getX(), event.getY());
+                if (event.getPointerCount() > 1) {
+                    handlePinchZoom(event);
+                } else {
+                    handlePan(event);
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                activePointerId = INVALID_POINTER_ID;
                 break;
         }
     }
+    private void resetZoom() {
+        // Reset the matrix to the original state
+        matrix.reset();
+        initializeMatrix();
+    }
+    private void handlePan(MotionEvent event) {
+        float dx = event.getX() - lastTouchX;
+        float dy = event.getY() - lastTouchY;
+        matrix.postTranslate(dx, dy);
+        lastTouchX = event.getX();
+        lastTouchY = event.getY();
+
+        updateImageView();
+    }
+
+    private void handlePinchZoom(MotionEvent event) {
+        int pointerIndex0 = event.findPointerIndex(activePointerId);
+        int pointerIndex1 = event.findPointerIndex(activePointerId == event.getPointerId(0) ? 1 : 0);
+
+        float x0 = event.getX(pointerIndex0);
+        float y0 = event.getY(pointerIndex0);
+        float x1 = event.getX(pointerIndex1);
+        float y1 = event.getY(pointerIndex1);
+
+        float distance = calculateDistance(x0, y0, x1, y1);
+
+        if (initialDistance == 0f) {
+            initialDistance = distance;
+        }
+
+        float scaleFactor = distance / initialDistance;
+
+        float currentScale = getCurrentScale();
+        float newScale = currentScale * scaleFactor;
+
+        if (newScale > MAX_ZOOM_FACTOR || newScale < MIN_ZOOM_FACTOR) {
+            return;
+        }
+
+        matrix.postScale(scaleFactor, scaleFactor, (x0 + x1) / 2, (y0 + y1) / 2);
+
+        lastTouchX = (x0 + x1) / 2;
+        lastTouchY = (y0 + y1) / 2;
+
+        updateImageView();
+    }
+
+    private float getCurrentScale() {
+        matrix.getValues(matrixValues);
+        return matrixValues[Matrix.MSCALE_X];
+    }
+    private void updateImageView() {
+        if(popupImageView != null){
+            popupImageView.setImageMatrix(matrix);
+            popupImageView.invalidate();
+        }
+    }
+
+// Add the following helper methods:
+
+    private float calculateDistance(float x0, float y0, float x1, float y1) {
+        float dx = x1 - x0;
+        float dy = y1 - y0;
+        return (float) Math.sqrt(dx * dx + dy * dy);
+    }
+
+    private void initializeMatrix() {
+        matrix.reset();
+        popupImageView.setImageMatrix(matrix);
+    }
+
     private void showZoomableImageDialog(ImageView clickedImageView) {
+
         final Dialog dialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.popup_zoomable_image);
 
         ImageView dialogImageView = dialog.findViewById(R.id.popupImageView);
         dialogImageView.setImageDrawable(clickedImageView.getDrawable());
+        popupImageView = dialogImageView;
         setZoomableImageListeners(dialogImageView);
+        initializeMatrix();
 
         dialogImageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -459,20 +561,15 @@ public class ProductView extends AppCompatActivity {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
 
-        // Set the text message with the link
         String message = "Check out this product: " + link;
         shareIntent.putExtra(Intent.EXTRA_TEXT, message);
 
-        // Start the system sharing dialogue
         try {
             startActivity(Intent.createChooser(shareIntent, "Share Product via"));
         } catch (android.content.ActivityNotFoundException ex) {
-            // Handle exception when no suitable app is installed
-            // You may want to show a message to the user
             ex.printStackTrace();
         }
     }
-
     private void setZoomableImageListeners(final ImageView imageView) {
         // Set up GestureDetector for detecting gestures
         final GestureDetector gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
@@ -509,7 +606,26 @@ public class ProductView extends AppCompatActivity {
             }
         });
     }
-
+    private class GestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastTapTime < DOUBLE_TAP_TIMEOUT) {
+                resetZoom();
+            }
+            lastTapTime = currentTime;
+            return true;
+        }
+    }
+    private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            float scaleFactor = detector.getScaleFactor();
+            matrix.postScale(scaleFactor, scaleFactor, detector.getFocusX(), detector.getFocusY());
+            updateImageView();
+            return true;
+        }
+    }
     private class ImageDownloadTask extends AsyncTask<String, Void, Bitmap> {
         private final WeakReference<ImageView> imageViewReference;
         private final WeakReference<ProgressBar> progressBarWeakReference;
@@ -544,7 +660,6 @@ public class ProductView extends AppCompatActivity {
                     mainImageView.setImageDrawable(imageView.getDrawable());
                 }
 
-//                lnrImageContainer.removeView(lnrImageContainer.getChildAt(lnrImageContainer.getChildCount() - x -1));
                 lnrImageContainer.removeView(progressBar);
             }
         }
