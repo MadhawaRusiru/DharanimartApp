@@ -3,8 +3,10 @@ package lk.dharanimart.mobile;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,7 +18,9 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -24,9 +28,11 @@ import com.google.gson.reflect.TypeToken;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.List;
 
 import lk.dharanimart.mobile.Adaptors.CategoryListAtaptor;
@@ -78,6 +84,58 @@ public class Home extends AppCompatActivity {
 
         LoadCategories loadCategories = new LoadCategories();
         loadCategories.execute();
+
+        Button btnYourAdHere = findViewById(R.id.btnYourAdHere);
+        btnYourAdHere.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialog dlgYourAddHere = new Dialog(Home.this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+                dlgYourAddHere.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dlgYourAddHere.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                dlgYourAddHere.setContentView(R.layout.your_ad_here);
+
+                Button btnClose = dialog.findViewById(R.id.btnCloseDialogue);
+                ImageButton btnYourAdHereWa = dlgYourAddHere.findViewById(R.id.btnYourAdHereWhatsapp);
+                ImageButton btnYourAdHereGf = dlgYourAddHere.findViewById(R.id.btnYourAdHereMessage);
+
+                btnClose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                btnYourAdHereWa.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            String url = "https://api.whatsapp.com/send?phone=" + getResources().getString(R.string.dharanimobile_number) + "&text=" + URLEncoder.encode(getResources().getString(R.string.ad_request), "UTF-8");
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse(url));
+                            startActivity(intent);
+                        } catch (ActivityNotFoundException | UnsupportedEncodingException e) {
+                            // Handle exception if Whatsapp is not installed or encoding fails
+                            Toast.makeText(Home.this, "Whatsapp is not installed or encoding failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                btnYourAdHereGf.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            String googlefromurl = "https://docs.google.com/forms/d/e/1FAIpQLScrb2BU6PLBmbjFLwOZ_8sHZbJeP-1dFNybhJQkSrF0zGssZQ/viewform";
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse(googlefromurl));
+                            startActivity(intent);
+                        } catch (ActivityNotFoundException e) {
+                            // Handle exception if Whatsapp is not installed or encoding fails
+                            Toast.makeText(Home.this, "Whatsapp is not installed or encoding failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                dlgYourAddHere.show();
+            }
+        });
     }
 
     @Override

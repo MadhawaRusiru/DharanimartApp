@@ -2,6 +2,8 @@
     <string name="app_name">Dharani mart</string>
     <string name="siteurl">https://www.dharanimart.lk</string>
     <string name="todo">TODO</string>
+    <string name="dharanimobile_number">0702167000</string>
     <string name="sub_cateogry">Sub Cateogry</string>
     <string name="lower_sub_cat">Select</string>
+    <string name="ad_request">I want Post an AD. මට දැන්වීමක් පල කර ගැනීමට අවශ්‍යයි.</string>
 </resources>

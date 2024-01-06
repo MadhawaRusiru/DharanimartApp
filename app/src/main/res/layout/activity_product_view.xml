@@ -155,7 +155,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="8dp"
-                android:text="*  Contact Seller to buy." />
+                android:text="*  Contact seller to buy." />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -216,7 +216,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
-                    android:text="Product Number"
+                    android:text="Product number"
                     android:textSize="16sp" />
 
                 <TextView
@@ -292,7 +292,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
-                    android:text="Membership"
+                    android:text="Membership number"
                     android:textSize="16sp" />
 
                 <TextView
