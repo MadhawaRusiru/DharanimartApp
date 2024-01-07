@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 String apiUrl = "https://www.dharanimart.lk/APP/API/?S=GET_PRODUCT&PROID=" + strings[0];
 
-                Log.d("MY_TAG",apiUrl);
+//                Log.d("MY_TAG",apiUrl);
 
                 URL url = new URL(apiUrl);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
                             response.append(line);
                         }
 
-                        Log.d("MY_LOG",response.toString());
+//                        Log.d("MY_LOG",response.toString());
                         Gson gson = new Gson();
                         Type productListType = new TypeToken<SuccessResponse<Product>>() {}.getType();
                         SuccessResponse<Product> products = gson.fromJson(response.toString(), productListType);
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
 
                         return products.getData();
                     } else {
-                        Log.e("LoadCategories", "HTTP response code: " + responseCode);
+//                        Log.e("LoadCategories", "HTTP response code: " + responseCode);
                     }
                 } finally {
                     urlConnection.disconnect();

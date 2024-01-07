@@ -84,7 +84,7 @@ public class MyShop extends AppCompatActivity {
 
         LoadPicture loadPicture = new LoadPicture(imgCateogryIcon,progressBar);
         loadPicture.execute(SiteUrl + "/APP/API/?S=GET_MEMBER_IMG&MEMBER=" + membership);
-        Log.d("MY_LOG",SiteUrl + "/APP/API/?S=GET_MEMBER_IMG&MEMBER=" + membership);
+//        Log.d("MY_LOG",SiteUrl + "/APP/API/?S=GET_MEMBER_IMG&MEMBER=" + membership);
 
         gridView = findViewById(R.id.lvSearchCategoryView);
 
@@ -243,7 +243,7 @@ public class MyShop extends AppCompatActivity {
             try {
                 String apiUrl = "https://www.dharanimart.lk/APP/API/?S=GET_PRODUCTS&CATEGORY=" + selectedCat + "&SUB_CATEGORY=" + selectedSubCat + "&LOWER_SUB_CATEGORY=" + selectedLowerSubCat + "&MEMBERSHIP=" + membership;
 
-                Log.d("MY_TAG",apiUrl);
+//                Log.d("MY_TAG",apiUrl);
 
                 URL url = new URL(apiUrl);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -263,14 +263,14 @@ public class MyShop extends AppCompatActivity {
                             response.append(line);
                         }
 
-                        Log.d("MY_LOG",response.toString());
+//                        Log.d("MY_LOG",response.toString());
                         Gson gson = new Gson();
                         Type productListType = new TypeToken<SuccessResponse<Product>>() {}.getType();
                         SuccessResponse<Product> products = gson.fromJson(response.toString(), productListType);
 
                         return products.getData();
                     } else {
-                        Log.e("LoadCategories", "HTTP response code: " + responseCode);
+//                        Log.e("LoadCategories", "HTTP response code: " + responseCode);
                     }
                 } finally {
                     urlConnection.disconnect();
@@ -289,7 +289,7 @@ public class MyShop extends AppCompatActivity {
                     productList = products;
                     productListAdaptor = new ProductListAdaptor(MyShop.this, products);
                     gridView.setAdapter(productListAdaptor);
-                    Log.d("MY_TAG", products.get(0).getTitle());
+//                    Log.d("MY_TAG", products.get(0).getTitle());
 
                     gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
@@ -312,7 +312,7 @@ public class MyShop extends AppCompatActivity {
             try {
                 String apiUrl = "https://www.dharanimart.lk/APP/API/?S=GET_CATEGORIES_OF_MEM&MEMBERSHIP="+ membership;
 
-                Log.d("MY_LOG",apiUrl);
+//                Log.d("MY_LOG",apiUrl);
 
                 URL url = new URL(apiUrl);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -332,13 +332,13 @@ public class MyShop extends AppCompatActivity {
                             response.append(line);
                         }
 
-                        Log.d("MY_LOG",response.toString());
+//                        Log.d("MY_LOG",response.toString());
                         Gson gson = new Gson();
 
                         CategoryResponse categories = gson.fromJson(response.toString(), CategoryResponse.class);
                         return categories.getData();
                     } else {
-                        Log.e("LoadCategories", "HTTP response code: " + responseCode);
+//                        Log.e("LoadCategories", "HTTP response code: " + responseCode);
                     }
                 } finally {
                     urlConnection.disconnect();
@@ -492,7 +492,7 @@ public class MyShop extends AppCompatActivity {
             String imageUrl = strings[0];
 //            imageUrl = "https://dharanimart.lk/img/member_pic/avatar.jpg";
 
-            Log.e("CAT_ICON", "Post-process");
+//            Log.e("CAT_ICON", "Post-process");
 
 
             // Check if the image is available in the memory cache
@@ -512,14 +512,14 @@ public class MyShop extends AppCompatActivity {
 
                 return bitmap;
             } catch (IOException e) {
-                Log.e("CAT_ICON", "Error while loading. Icon: " + strings[0]);
+//                Log.e("CAT_ICON", "Error while loading. Icon: " + strings[0]);
                 return null;
             }
         }
 
         @Override
         protected void onPostExecute(Bitmap imageBitmap) {
-            Log.e("CAT_ICON", "Post-process");
+//            Log.e("CAT_ICON", "Post-process");
 
             // Update the UI with the loaded image
             if (imageBitmap != null) {

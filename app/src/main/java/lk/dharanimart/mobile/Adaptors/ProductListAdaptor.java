@@ -91,7 +91,7 @@ public class ProductListAdaptor extends BaseAdapter {
             int discount = (int) product.getPrice() * product.getDiscount() / 100;
             int discountedPrice = Math.round(product.getPrice() - discount);
 
-            Log.d("MY_TAG", String.valueOf(discountedPrice));
+//            Log.d("MY_TAG", String.valueOf(discountedPrice));
 
             String originalText = "Rs." + String.valueOf(product.getPrice()) + "/-";
             Spannable spannable = new SpannableString(originalText);
@@ -162,7 +162,7 @@ public class ProductListAdaptor extends BaseAdapter {
 
                 return bitmap;
             } catch (IOException e) {
-                Log.e("CAT_ICON", "Error while loading. Icon: " + strings[0]);
+//                Log.e("CAT_ICON", "Error while loading. Icon: " + strings[0]);
                 return null;
             }
         }

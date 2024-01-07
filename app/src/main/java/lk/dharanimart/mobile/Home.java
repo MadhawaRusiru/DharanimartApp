@@ -36,6 +36,7 @@ import java.net.URLEncoder;
 import java.util.List;
 
 import lk.dharanimart.mobile.Adaptors.CategoryListAtaptor;
+import lk.dharanimart.mobile.Requests.HttpGetRequestTask;
 import lk.dharanimart.mobile.Responses.Category;
 import lk.dharanimart.mobile.Responses.CategoryResponse;
 import lk.dharanimart.mobile.Responses.SuccessResponse;
@@ -56,6 +57,10 @@ public class Home extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("DharanimartApp",MODE_PRIVATE);
 
         siteUrl = getResources().getString(R.string.siteurl);
+
+        String url = getResources().getString(R.string.siteurl) + "/APP/API/?S=SET_APP_COUNT";
+        HttpGetRequestTask getRequestTask = new HttpGetRequestTask();
+        getRequestTask.execute(url);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
@@ -179,7 +184,7 @@ public class Home extends AppCompatActivity {
                             response.append(line);
                         }
 
-                        Log.d("MY_LOG",response.toString());
+//                        Log.d("MY_LOG",response.toString());
                         Gson gson = new Gson();
 //                        Type categoryListType = new TypeToken<SuccessResponse<Category>>() {}.getType();
 //                        SuccessResponse<Category> categories = gson.fromJson(response.toString(), categoryListType);
@@ -188,11 +193,11 @@ public class Home extends AppCompatActivity {
                         SharedPreferences.Editor sd = sharedPreferences.edit();
                         sd.putString("CAT_STRING", response.toString());
                         sd.apply();
-                        Log.d("MY_LOG",categories.getData().get(0).getName());
+//                        Log.d("MY_LOG",categories.getData().get(0).getName());
 
                         return categories.getData();
                     } else {
-                        Log.e("LoadCategories", "HTTP response code: " + responseCode);
+//                        Log.e("LoadCategories", "HTTP response code: " + responseCode);
                     }
                 } finally {
                     urlConnection.disconnect();
@@ -210,7 +215,7 @@ public class Home extends AppCompatActivity {
 
                 categoryListAdaptor = new CategoryListAtaptor(Home.this, categories, Home.this);
                 gridView.setAdapter(categoryListAdaptor);
-                Log.d("MY_TAG", categories.get(0).getName());
+//                Log.d("MY_TAG", categories.get(0).getName());
 
                 gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override

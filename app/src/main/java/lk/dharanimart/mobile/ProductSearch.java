@@ -76,7 +76,7 @@ public class ProductSearch extends AppCompatActivity {
             CategoryResponse categoriesResponse = gson.fromJson(catJson, CategoryResponse.class);
             categories = categoriesResponse.getData();
         }
-        Log.d("X",categories.get(0).getName());
+//        Log.d("X",categories.get(0).getName());
 
 
         gridView = findViewById(R.id.lvSearchCategoryView);
@@ -229,7 +229,7 @@ public class ProductSearch extends AppCompatActivity {
             try {
                 String apiUrl = "https://www.dharanimart.lk/APP/API/?S=GET_PRODUCTS&CATEGORY=" + selectedCat + "&SUB_CATEGORY=" + selectedSubCat + "&LOWER_SUB_CATEGORY=" + selectedLowerSubCat + "&SEARCH=" + searchKey;
 
-                Log.d("MY_TAG",apiUrl);
+//                Log.d("MY_TAG",apiUrl);
 
                 URL url = new URL(apiUrl);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -256,7 +256,7 @@ public class ProductSearch extends AppCompatActivity {
 
                         return products.getData();
                     } else {
-                        Log.e("LoadCategories", "HTTP response code: " + responseCode);
+//                        Log.e("LoadCategories", "HTTP response code: " + responseCode);
                     }
                 } finally {
                     urlConnection.disconnect();
@@ -275,7 +275,7 @@ public class ProductSearch extends AppCompatActivity {
                     productList = products;
                     productListAdaptor = new ProductListAdaptor(ProductSearch.this, products);
                     gridView.setAdapter(productListAdaptor);
-                    Log.d("MY_TAG", products.get(0).getTitle());
+//                    Log.d("MY_TAG", products.get(0).getTitle());
 
                     gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override

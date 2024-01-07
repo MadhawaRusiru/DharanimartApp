@@ -16,7 +16,7 @@ public class Communication {
         HttpURLConnection connection = null;
         BufferedReader reader = null;
         StringBuilder response = new StringBuilder();
-        Log.d("MY_LOG", "API [" + RequestSrl + "]" + ": REQUEST" + jsonString);
+//        Log.d("MY_LOG", "API [" + RequestSrl + "]" + ": REQUEST" + jsonString);
 
         try {
             URL url = new URL(RequestSrl);
@@ -36,10 +36,10 @@ public class Communication {
             while ((line = reader.readLine()) != null) {
                 response.append(line);
             }
-            Log.d("MY_LOG", "REQUEST" + jsonString);
+//            Log.d("MY_LOG", "REQUEST" + jsonString);
 
         } catch (IOException e) {
-            Log.d("MY_LOG", "B " + e.getMessage() + ":- " + response.toString());
+//            Log.d("MY_LOG", "B " + e.getMessage() + ":- " + response.toString());
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -52,7 +52,7 @@ public class Communication {
                 }
             }
         }
-        Log.d("MY_LOG", "RESPONSE" + response.toString());
+//        Log.d("MY_LOG", "RESPONSE" + response.toString());
         return response.toString();
     }
 
@@ -63,7 +63,7 @@ public class Communication {
             SendAsync sendAsync = new SendAsync();
             return sendAsync.execute(url).get();
         }catch (Exception e){
-            Log.d("GET_URL",e.getMessage());
+//            Log.d("GET_URL",e.getMessage());
         }
         return "";
     }

@@ -51,6 +51,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import lk.dharanimart.mobile.Requests.HttpGetRequestTask;
 import lk.dharanimart.mobile.Responses.Product;
 
 public class ProductView extends AppCompatActivity {
@@ -458,6 +459,9 @@ public class ProductView extends AppCompatActivity {
         dialog.show();
     }
     private void showContactDialog(String whatsapp, String mobile, String message, String sellerName) {
+        String url = getResources().getString(R.string.siteurl) + "/APP/API/?S=SET_PRO_CONTACT_HIT&PRODUCT_ID=" + product.getPro_id();
+        HttpGetRequestTask getRequestTask = new HttpGetRequestTask();
+        getRequestTask.execute(url);
 
         final Dialog dialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
 
